@@ -360,4 +360,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4efde99ce5ebc48a8d7739eadb367f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 90
+  meshRenderer: {fileID: 0}
+  lerpTime: 1
+  lerpColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0.008134127, b: 1, a: 0}
+  - {r: 0, g: 1, b: 0.032518864, a: 0}
+  - {r: 1, g: 0, b: 0.543159, a: 0}
+  - {r: 0, g: 0.9101777, b: 1, a: 0}
+  - {r: 0.43755388, g: 0, b: 1, a: 0}
+  speed: 30

@@ -96,5 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4efde99ce5ebc48a8d7739eadb367f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 90
-  prefab: {fileID: 1790558090459662404}
+  meshRenderer: {fileID: 277441317458635153}
+  lerpTime: 0.391
+  lerpColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0.14966035, b: 1, a: 0}
+  - {r: 1, g: 0, b: 0.76454115, a: 0}
+  - {r: 0, g: 1, b: 0.94999766, a: 0}
+  - {r: 0.018076181, g: 1, b: 0, a: 0}
+  - {r: 1, g: 0, b: 0.14035654, a: 0}
+  speed: 1
