@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loops: 5
-  prefab: {fileID: 919132149155446097, guid: 58812e26813381a43be492250ef3dcad, type: 3}
+  prefab: {fileID: 1790558090459662404, guid: 456d472aaaecf9446a14ef84ce567265, type: 3}
 --- !u!4 &1113068648
 Transform:
   m_ObjectHideFlags: 0
@@ -182,8 +182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4efde99ce5ebc48a8d7739eadb367f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 277441317458635153, guid: 456d472aaaecf9446a14ef84ce567265, type: 3}
+  lerpTime: 0
+  lerpColors: []
   speed: 16
-  prefab: {fileID: 919132149155446097, guid: 58812e26813381a43be492250ef3dcad, type: 3}
 --- !u!1 &1979112065
 GameObject:
   m_ObjectHideFlags: 0

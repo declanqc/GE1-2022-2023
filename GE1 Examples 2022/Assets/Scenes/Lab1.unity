@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4efde99ce5ebc48a8d7739eadb367f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 0}
+  meshRenderer: {fileID: -7511558181221131132, guid: 58812e26813381a43be492250ef3dcad, type: 3}
   lerpTime: 1
   lerpColors:
   - {r: 1, g: 0, b: 0, a: 0}
