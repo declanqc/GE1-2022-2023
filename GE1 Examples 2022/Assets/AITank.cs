@@ -12,8 +12,21 @@ public class AITank : MonoBehaviour {
     public float speed = 10;
     public float waitTime = .3f;
     public float turnSpeed = 90f;
-    public Transform player;
+    public float viewDistance;
+     float viewAngle;
+    public Transform Player;
     public Transform pathHolder;
+    public LayerMask viewMask;
+    public Light spotlight;
+    Color originalSpotlightColor;
+
+
+
+    float playerVisibleTimer;
+    public float timeToSpotPlayer = .5f;
+    public float chaseSpeed = 0.01f;
+
+
 
     public void OnDrawGizmos()
     {
@@ -40,8 +53,9 @@ public class AITank : MonoBehaviour {
 
     // Use this for initialization
     void Awake () {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        viewAngle = spotlight.spotAngle;
+        originalSpotlightColor = spotlight.color;
 
         Vector3[] waypoints = new Vector3[pathHolder.childCount];
         for (int i = 0; i < waypoints.Length; i++)
@@ -54,10 +68,40 @@ public class AITank : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        // Task 3
-        // Put code here to move the tank towards the next waypoint
-        // When the tank reaches a waypoint you should advance to the next one
+        Debug.Log(viewAngle);
+        
 
+        if (CanSeePlayer())
+        {
+            Debug.Log("Player is in front of tank");
+
+            playerVisibleTimer += Time.deltaTime;
+            transform.LookAt(Player);
+           // StopFollowpath();
+
+        }
+        else
+        {
+            playerVisibleTimer -= Time.deltaTime;
+        }
+        playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
+
+        spotlight.color = Color.Lerp(originalSpotlightColor, Color.red, playerVisibleTimer / timeToSpotPlayer);
+
+        if (playerVisibleTimer >= timeToSpotPlayer)
+        {
+            
+            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, chaseSpeed * Time.deltaTime);
+            transform.LookAt(Player);
+
+            StopFollowpath();
+
+
+        }
+        else
+        {
+
+        }
 
         // Task 4
         // Put code here to check if the player is in front of or behine the tank
@@ -66,7 +110,10 @@ public class AITank : MonoBehaviour {
         // You can print stuff to the screen using:
         GameManager.Log("Hello from th AI tank");
     }
-
+    void StopFollowpath()
+    {
+        StopCoroutine("FollowPath");
+    }
     IEnumerator FollowPath(Vector3[] waypoints)
     {
         transform.position = waypoints[0];
@@ -100,5 +147,22 @@ public class AITank : MonoBehaviour {
             transform.eulerAngles = Vector3.up * angle;
             yield return null;
         }
+    }
+    bool CanSeePlayer()
+    {
+
+        if (Vector3.Distance(transform.position, Player.position) < viewDistance)
+        {
+            Vector3 dirToPlayer = (Player.position - transform.position).normalized;
+            float angleBetweenGuardAndPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+            if (angleBetweenGuardAndPlayer < viewAngle / 2f)
+            {
+                if (!Physics.Linecast(transform.position, Player.position, viewMask))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
