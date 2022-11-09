@@ -6,14 +6,17 @@ public class Spawner : MonoBehaviour
 {
     public GameObject Tank;
     public int MaxEnemies = 0;
+    public bool spawned;
+    
     System.Collections.IEnumerator Spawn()
     {
   
-        while(true)
+        while(spawned == true)
         {
+            Vector3 randomSpawnPosition = new Vector3(Random.Range(-10, 11), 10, Random.Range(-10, 11));
             GameObject g = Tank; //GameObject.CreatePrimitive(PrimitiveType.Cube);
             //g.AddComponent<Rigidbody>();
-            Instantiate(g);
+            Instantiate(g, randomSpawnPosition, Quaternion.identity);
             MaxEnemies++;
             g.transform.position = transform.position;
         
@@ -26,16 +29,18 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        spawned = true;
         StartCoroutine(Spawn());
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(MaxEnemies);
 
-        if (MaxEnemies >= 5)
+        if (MaxEnemies > 4)
         {
-            CancelInvoke("Spawn");
+            spawned = false;
         }
 
     }
