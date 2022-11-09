@@ -1,114 +1,87 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class AITank : MonoBehaviour
+{
+    public List<Vector3> waypoints;
+    public int count = 5;
+    public float radius = 5;
 
-public class AITank : MonoBehaviour {
+    public float speed;
+    public float fov;
 
-    public float radius = 10;
-    public int numWaypoints = 5;
-    public int current = 0;
-    List<Vector3> waypoints = new List<Vector3>();
-    public float speed = 10;
-    public float waitTime = .3f;
-    public float turnSpeed = 90f;
-    public float viewDistance;
-     float viewAngle;
-    public Transform Player;
-    public Transform pathHolder;
-    public LayerMask viewMask;
-    public Light spotlight;
-    Color originalSpotlightColor;
+    public Transform player;
 
+    void SetUpWaypoints()
+    {
+        waypoints = new List<Vector3>();
+        waypoints.Clear();
+        float theta = (Mathf.PI * 2.0f) / (float) count;
 
+        for(int i = 0 ; i < count ; i ++)
+        {
+            float angle = i * theta;
+            Vector3 p = new Vector3
+                (
+                    Mathf.Sin(angle) * radius, 
+                    0,
+                    Mathf.Cos(angle) * radius
+                );
+            p = transform.TransformPoint(p);
+            waypoints.Add(p);
 
-    float playerVisibleTimer;
-    public float timeToSpotPlayer = .5f;
-    public float chaseSpeed = 0.01f;
+        }
+    }
 
-
-
-    public void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         if (!Application.isPlaying)
         {
-            // Task 1
-            // Put code here to draw the gizmos
-            // Use sin and cos to calculate the positions of the waypoints 
-            // You can draw gizmos using
-            // Gizmos.color = Color.green;
-            // Gizmos.DrawWireSphere(pos, 1);
-
-            Vector3 startPosition = pathHolder.GetChild(0).position;
-            Vector3 previousPosition = startPosition;
-            foreach (Transform waypoint in pathHolder)
+            SetUpWaypoints();
+            foreach (Vector3 v in waypoints)
             {
-                Gizmos.DrawSphere(waypoint.position, .3f);
-                Gizmos.DrawLine(previousPosition, waypoint.position);
-                previousPosition = waypoint.position;
+                Gizmos.DrawWireSphere(v, 0.5f);
             }
-            Gizmos.DrawLine(previousPosition, startPosition);
         }
     }
 
-    // Use this for initialization
-    void Awake () {
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        viewAngle = spotlight.spotAngle;
-        originalSpotlightColor = spotlight.color;
+        // Start is called before the first frame update
+        void Start()
+    {
+        SetUpWaypoints();
 
-        Vector3[] waypoints = new Vector3[pathHolder.childCount];
-        for (int i = 0; i < waypoints.Length; i++)
-        {
-            waypoints[i] = pathHolder.GetChild(i).position;
-            waypoints[i] = new Vector3(waypoints[i].x, transform.position.y, waypoints[i].z);
-        }
-        StartCoroutine(FollowPath(waypoints));
     }
+
+    int current = 0;
 
     // Update is called once per frame
-    void Update () {
-        Debug.Log(viewAngle);
-        
-
-        if (CanSeePlayer())
+    void Update()
+    {
+        Vector3 totarget = waypoints[current] - transform.position;
+        float dist = totarget.magnitude;
+        if (dist < 1.0f)
         {
-            Debug.Log("Player is in front of tank");
+            current = (current + 1) % waypoints.Count;
+        }
+        Quaternion q = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(totarget), Time.deltaTime);
+        //transform.rotation = q;
+        //transform.Translate(0, 0, speed * Time.deltaTime);
 
-            playerVisibleTimer += Time.deltaTime;
-            transform.LookAt(Player);
-           // StopFollowpath();
-
+        Vector3 toPlayer = player.position - transform.position;
+        toPlayer.Normalize();
+        float dot = Vector3.Dot(toPlayer, transform.forward);
+       
+        GameManager.Log((dot > 0) ? "In front" : "behind");            
+        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        if (angle < 45)
+        {
+            GameManager.Log("I can see you");
         }
         else
         {
-            playerVisibleTimer -= Time.deltaTime;
+            GameManager.Log("I can't see you");
         }
-        playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
-
-        spotlight.color = Color.Lerp(originalSpotlightColor, Color.red, playerVisibleTimer / timeToSpotPlayer);
-
-        if (playerVisibleTimer >= timeToSpotPlayer)
-        {
-            
-            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, chaseSpeed * Time.deltaTime);
-            transform.LookAt(Player);
-
-            StopFollowpath();
-
-
-        }
-        else
-        {
-
-        }
-
-        // Task 4
-        // Put code here to check if the player is in front of or behine the tank
-        // Task 5
-        // Put code here to calculate if the player is inside the field of view and in range
-        // You can print stuff to the screen using:
-        GameManager.Log("Hello from th AI tank");
     }
     void StopFollowpath()
     {
