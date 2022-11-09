@@ -87,55 +87,7 @@ public class AITank : MonoBehaviour
     {
         StopCoroutine("FollowPath");
     }
-    IEnumerator FollowPath(Vector3[] waypoints)
-    {
-        transform.position = waypoints[0];
-        int targetWaypointIndex = 1;
-        Vector3 targetWaypoint = waypoints[targetWaypointIndex];
-        transform.LookAt(targetWaypoint);
 
-        while (true)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-            if (transform.position == targetWaypoint)
-            {
-                targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
-                targetWaypoint = waypoints[targetWaypointIndex];
-                yield return new WaitForSeconds(waitTime);
-                yield return StartCoroutine(TurnToFace(targetWaypoint));
-            }
-            yield return null;
-        }
 
-    }
-
-    IEnumerator TurnToFace(Vector3 lookTarget)
-    {
-        Vector3 dirToLookTarget = (lookTarget - transform.position).normalized;
-        float targetAngle = 90 - Mathf.Atan2(dirToLookTarget.z, dirToLookTarget.x) * Mathf.Rad2Deg;
-
-        while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.05f)
-        {
-            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnSpeed * Time.deltaTime);
-            transform.eulerAngles = Vector3.up * angle;
-            yield return null;
-        }
-    }
-    bool CanSeePlayer()
-    {
-
-        if (Vector3.Distance(transform.position, Player.position) < viewDistance)
-        {
-            Vector3 dirToPlayer = (Player.position - transform.position).normalized;
-            float angleBetweenGuardAndPlayer = Vector3.Angle(transform.forward, dirToPlayer);
-            if (angleBetweenGuardAndPlayer < viewAngle / 2f)
-            {
-                if (!Physics.Linecast(transform.position, Player.position, viewMask))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+  
 }
