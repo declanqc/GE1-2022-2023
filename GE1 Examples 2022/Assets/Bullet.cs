@@ -14,10 +14,11 @@ public class Bullet : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "brick")
+        if (collision.gameObject.tag == "Enemy")
         {
+            transform.GetChild(0);            
             GameObject.Destroy(this.gameObject);
-            GameObject.Destroy(collision.gameObject);
+          /*  GameObject.Destroy(collision.gameObject);*/
             Debug.Log("Explosion");
 
         }

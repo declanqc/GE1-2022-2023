@@ -30,6 +30,7 @@ public class Shooting : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started && shootCR == null)
         {
+            
             shootCR = StartCoroutine(ShootCoroutine());
         }
         if (context.phase == InputActionPhase.Canceled)

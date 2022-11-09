@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 2716609097467749082}
   - component: {fileID: 2716609097467749085}
   - component: {fileID: 2716609097467749084}
+  - component: {fileID: 1632434886}
   m_Layer: 0
   m_Name: tank
   m_TagString: Untagged
@@ -166,6 +167,21 @@ MonoBehaviour:
   fireRate: 5
   speed: 5
   rotSpeed: 180
+--- !u!114 &1632434886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2716609097467749083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538ff09e30d9bd944b8153fa8bc76bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 6577131958101206330, guid: e1643820c86f865408879faa15aae09d, type: 3}
+  bulletSpawn: {fileID: 2716609096829490474}
+  fireRate: 5
 --- !u!1 &2716609098167125864
 GameObject:
   m_ObjectHideFlags: 0

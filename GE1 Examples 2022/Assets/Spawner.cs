@@ -36,7 +36,6 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(MaxEnemies);
 
         if (MaxEnemies > 4)
         {
