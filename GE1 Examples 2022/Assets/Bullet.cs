@@ -16,7 +16,8 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            transform.GetChild(0);            
+            collision.gameObject.transform.DetachChildren();
+            
             GameObject.Destroy(this.gameObject);
           /*  GameObject.Destroy(collision.gameObject);*/
             Debug.Log("Explosion");
