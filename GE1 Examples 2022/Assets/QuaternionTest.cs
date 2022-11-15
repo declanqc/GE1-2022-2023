@@ -13,8 +13,18 @@ public class QuaternionTest : MonoBehaviour
     public Quaternion start;
     public Quaternion end;
     public bool isLooking;
+
+
+    Coroutine shootCR = null;
+
+    public float fireRate = 5;
+
+
+    public GameObject bulletPrefab;
+    public Transform bulletSpawn;
     void Start()
     {
+
     }
 
    
@@ -36,7 +46,20 @@ public class QuaternionTest : MonoBehaviour
         
         
     }
+    IEnumerator ShootCoroutine()
+    {
+        while (true)
+        {
+            GameObject bullet = GameObject.Instantiate<GameObject>(bulletPrefab);
+            bullet.transform.rotation = transform.rotation;
+            bullet.transform.forward = bullet.transform.forward;
+            bullet.transform.position = bulletSpawn.position;
+            bullet.GetComponent<AudioSource>().pitch = Random.Range(0.5f, 3.0f);
+            bullet.GetComponent<AudioSource>().Play();
 
+            yield return new WaitForSeconds(1 / (float)fireRate);
+        }
+    }
 
     public void OnTriggerStay(Collider other)
     {
@@ -45,6 +68,7 @@ public class QuaternionTest : MonoBehaviour
             isLooking = true;
             LookAtPlayer();
             Debug.Log("looking");
+            shootCR = StartCoroutine(ShootCoroutine());
         }
         else
         {
