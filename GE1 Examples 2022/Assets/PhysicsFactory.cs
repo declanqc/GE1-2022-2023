@@ -5,8 +5,29 @@ public class PhysicsFactory : MonoBehaviour {
 
     public LayerMask groundLM;
     public GameObject wormPrefab;
+    public GameObject CubePrefab;
+
+
     void CreateTower(float radius, int height, int segments, Vector3 point)
     {
+        float angle = Mathf.PI * 2.0f / (float)segments;
+        for (int row = 0; row < height; row++)
+        {
+
+
+            for (int i = 0; i < segments; i++)
+            {
+                float a = angle * i + (0.5f * angle * row);
+                Vector3 pos = new Vector3(
+                    Mathf.Sin(a) * radius,
+                    0.5f + row,
+                    Mathf.Cos(a) * radius
+                );
+                pos = transform.TransformPoint(pos);
+                GameObject block = GameObject.Instantiate(CubePrefab, pos, Quaternion.Euler(0, a * Mathf.Rad2Deg, 0));
+                block.GetComponent<Renderer>().material.color = Color.HSVToRGB(Random.Range(0.0f, 1.0f), 1, 1);
+            }
+        }
     }
 
     
@@ -166,13 +187,16 @@ public class PhysicsFactory : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            RaycastHit rch;
-            GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");            
-            if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out rch, 100))
+            RaycastHit raycastHit;
+            GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out raycastHit))
             {
-                Vector3 p = rch.point;
-                p.y = 0.5f;
-                CreateTower(3, 10, 12, p);
+                if (raycastHit.collider.gameObject.tag == "groundPlane")
+                {
+                    Vector3 pos = raycastHit.point;
+                    pos.y = 20;
+                    CreateTower(10, 10, 10, pos);
+                }
             }
         }
 
@@ -190,5 +214,8 @@ public class PhysicsFactory : MonoBehaviour {
                 CreateWorm(p, q);
             }
         }
+
+       
+        
     }
 }
