@@ -18,11 +18,7 @@ public class PhysicsFactory : MonoBehaviour {
             for (int i = 0; i < segments; i++)
             {
                 float a = angle * i + (0.5f * angle * row);
-                Vector3 pos = new Vector3(
-                    Mathf.Sin(a) * radius,
-                    0.5f + row,
-                    Mathf.Cos(a) * radius
-                );
+                Vector3 pos = new Vector3( Mathf.Sin(a) * radius, 0.5f + row, Mathf.Cos(a) * radius);
                 pos = transform.TransformPoint(pos);
                 GameObject block = GameObject.Instantiate(CubePrefab, pos, Quaternion.Euler(0, a * Mathf.Rad2Deg, 0));
                 block.GetComponent<Renderer>().material.color = Color.HSVToRGB(Random.Range(0.0f, 1.0f), 1, 1);
@@ -193,9 +189,9 @@ public class PhysicsFactory : MonoBehaviour {
             {
                 if (raycastHit.collider.gameObject.tag == "groundPlane")
                 {
-                    Vector3 pos = raycastHit.point;
-                    pos.y = 20;
-                    CreateTower(10, 10, 10, pos);
+                    Vector3 point = raycastHit.point;
+                    point.y = 20;
+                    CreateTower(5, 10, 10, point);
                 }
             }
         }
